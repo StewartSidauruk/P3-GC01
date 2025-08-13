@@ -128,7 +128,6 @@ export default function Navbar() {
                 ))}
               </div>
 
-              {/* Search */}
               <div className="ml-6">
                 <div className="relative">
                   <input
