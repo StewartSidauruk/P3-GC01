@@ -9,9 +9,9 @@ interface News {
   category: string;
 }
 
-type NewsForm = Pick<News, "title" | "description" | "poster">;
+type NewsForm = Pick<News, 'title' | 'description' | 'poster'>;
 
-interface Multimedia {
+interface MultimediaItem {
   url: string;
 }
 
@@ -21,5 +21,5 @@ interface Article {
   abstract: string;
   url: string;
   byline: string;
-  multimedia: Multimedia;
+  multimedia?: MultimediaItem[];
 }
