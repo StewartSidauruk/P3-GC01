@@ -106,9 +106,9 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 pt-8 text-center">
-          <p className="text-2xl font-serif font-bold mb-2">JogjakarTime's</p>
+          <p className="text-2xl font-serif font-bold mb-2">JogjakarTime&apos;s is ...</p>
           <p className="text-sm text-gray-400">
-            © 2025 JogjakarTime's Company. All rights reserved.
+            © 2025 JogjakarTime&apos;s Company. All rights reserved.
           </p>
         </div>
       </div>

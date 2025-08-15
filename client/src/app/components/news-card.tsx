@@ -1,20 +1,22 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Article } from "../lib/nyt";
 
 export default function NewsCard({ item }: { item: Article }) {
   const imgSrc = item.multimedia?.[0]?.url ?? "/placeholder.png";
-
   const author = item.byline?.replace(/^By\s+/i, "") || "";
 
   return (
     <article className="group cursor-pointer">
       <Link href={item.url} target="_blank" className="block">
         <div className="space-y-3">
-          <div className="aspect-[4/3] overflow-hidden rounded-lg">
-            <img
+          <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+            <Image
               src={imgSrc}
               alt={item.title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 

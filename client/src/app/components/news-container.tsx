@@ -1,3 +1,4 @@
+import Image from "next/image";
 import NewsCard from "./news-card";
 import type { Article } from "../lib/nyt";
 
@@ -20,11 +21,13 @@ export default function NewsContainer({
       {news.length > 0 && (
         <section className="mb-12">
           <div className="grid md:grid-cols-2 gap-8 items-start">
-            <div className="aspect-[16/9] overflow-hidden rounded-lg">
-              <img
+            <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
+              <Image
                 src={news[0].multimedia?.[0]?.url ?? "/placeholder.png"}
                 alt={news[0].title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
               />
             </div>
             <div className="space-y-4">
