@@ -1,17 +1,40 @@
+import type { Metadata } from "next";
 import NewsContainer from "../components/news-container";
 import { searchArticles } from "../lib/nyt";
 
+/** Tiny runtime guard so we can support both Next 14 (object) and Next 15 (Promise) */
 function isPromise<T = unknown>(v: unknown): v is Promise<T> {
   return typeof v === "object" && v !== null && "then" in (v as { then?: unknown });
+}
+
+// Dynamic <title>/<meta> per query (pages receive searchParams)
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: unknown | Promise<unknown>;
+}): Promise<Metadata> {
+  const sp = isPromise<Record<string, unknown>>(searchParams)
+    ? await searchParams
+    : (searchParams as Record<string, unknown> | undefined);
+
+  const q = typeof sp?.q === "string" ? sp.q.trim() : "";
+
+  return q
+    ? {
+        title: `Search: "${q}" • JogjakarTime's`,
+        description: `Search results for "${q}" from The New York Times via JogjakarTime's.`,
+      }
+    : {
+        title: "Search News • JogjakarTime's",
+        description: "Search the latest news from The New York Times via JogjakarTime's",
+      };
 }
 
 export default async function SearchPage({
   searchParams,
 }: {
-  // Accept both shapes without `any`
   searchParams: unknown | Promise<unknown>;
 }) {
-  // Resolve if Next passes a Promise (Next 15), or use the object directly (older shape)
   const sp = isPromise<Record<string, unknown>>(searchParams)
     ? await searchParams
     : (searchParams as Record<string, unknown> | undefined);
