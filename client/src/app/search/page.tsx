@@ -1,10 +1,22 @@
 import NewsContainer from "../components/news-container";
 import { searchArticles } from "../lib/nyt";
 
-export default async function SearchPage({ searchParams }: any) {
-  // Next 15 may pass searchParams as a Promise — support both
-  const sp = searchParams?.then ? await searchParams : searchParams;
-  const q = (sp?.q ?? "").trim();
+function isPromise<T = unknown>(v: unknown): v is Promise<T> {
+  return typeof v === "object" && v !== null && "then" in (v as { then?: unknown });
+}
+
+export default async function SearchPage({
+  searchParams,
+}: {
+  // Accept both shapes without `any`
+  searchParams: unknown | Promise<unknown>;
+}) {
+  // Resolve if Next passes a Promise (Next 15), or use the object directly (older shape)
+  const sp = isPromise<Record<string, unknown>>(searchParams)
+    ? await searchParams
+    : (searchParams as Record<string, unknown> | undefined);
+
+  const q = typeof sp?.q === "string" ? sp.q.trim() : "";
 
   if (!q) {
     return (
