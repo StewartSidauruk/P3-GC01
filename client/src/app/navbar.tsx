@@ -1,10 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+
+const NAV = [
+  { label: "World", slug: "world" },
+  { label: "Indonesia", slug: "indonesia" },
+  { label: "Politics", slug: "politics" },
+  { label: "Business", slug: "business" },
+  { label: "Technology", slug: "technology" },
+  { label: "Sports", slug: "sports" },
+  { label: "Culture", slug: "culture" },
+  { label: "Opinion", slug: "opinion" },
+];
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const pathname = usePathname();
 
   const today = useMemo(() => {
     try {
@@ -20,19 +34,10 @@ export default function Navbar() {
     }
   }, []);
 
-  const navLinks = [
-    "World",
-    "Indonesia",
-    "Politics",
-    "Business",
-    "Technology",
-    "Sports",
-    "Culture",
-    "Opinion",
-  ];
+  const isActive = (slug: string) => pathname === `/category/${slug}`;
 
   return (
-    <div className="min-h-[theme(spacing.0)] bg-white text-black">
+    <div className="bg-white text-black">
       <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
           <div className="flex items-center justify-between gap-4">
@@ -97,9 +102,11 @@ export default function Navbar() {
           </div>
 
           <div className="text-center py-4 sm:py-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-wide">
-              JogjakarTime&apos;s
-            </h1>
+            <Link href="/">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-wide hover:opacity-80">
+                JogjakarTime&apos;s
+              </h1>
+            </Link>
             <p className="text-[10px] sm:text-xs text-gray-600 mt-1 sm:mt-2 tracking-widest">
               THE VOICE OF WONG JOGJA
             </p>
@@ -107,44 +114,54 @@ export default function Navbar() {
 
           <nav className="hidden lg:block border-t border-b border-gray-200 py-3">
             <div className="flex items-center justify-between">
-              <div className="flex-1 flex justify-center gap-6 xl:gap-8 text-sm font-medium">
-                {navLinks.map((label) => (
-                  <a
-                    key={label}
-                    href="#"
-                    className="hover:underline whitespace-nowrap"
+              <div className="flex-1 flex justify-center gap-2 xl:gap-4 text-sm font-medium">
+                {NAV.map(({ label, slug }) => (
+                  <Link
+                    key={slug}
+                    href={`/category/${slug}`}
+                    className={`px-3 py-1.5 rounded-full whitespace-nowrap transition
+                    ${
+                      isActive(slug)
+                        ? "bg-black text-white"
+                        : "hover:bg-gray-100 text-gray-800"
+                    }`}
                   >
                     {label}
-                  </a>
+                  </Link>
                 ))}
               </div>
 
               <div className="ml-6">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search news..."
-                    className="w-56 xl:w-64 px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-gray-500"
-                  />
-                  <button
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                    aria-label="Search"
-                  >
-                    <svg
-                      className="w-4 h-4 text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                {/* Desktop search box */}
+                <form action="/search" method="GET" className="ml-6">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="q"
+                      placeholder="Search news..."
+                      className="w-56 xl:w-64 px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-gray-500"
+                    />
+                    <button
+                      className="absolute right-2 top-1/2 -translate-y-1/2"
+                      aria-label="Search"
+                      type="submit"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                      <svg
+                        className="w-4 h-4 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </nav>
@@ -155,36 +172,47 @@ export default function Navbar() {
               mobileSearchOpen ? "grid grid-rows-[1fr]" : "grid grid-rows-[0fr]"
             }`}
           >
-            <div className="overflow-hidden">
-              <div className="mt-2">
-                <label className="sr-only" htmlFor="m-search">
-                  Search
-                </label>
-                <div className="relative">
-                  <input
-                    id="m-search"
-                    type="text"
-                    placeholder="Search news..."
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-gray-500"
-                  />
-                  <button
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                    aria-label="Search"
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+            <div
+              id="mobile-search"
+              className={`sm:hidden ... ${
+                mobileSearchOpen
+                  ? "grid grid-rows-[1fr]"
+                  : "grid grid-rows-[0fr]"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="mt-2">
+                  <form action="/search" method="GET" className="relative">
+                    <label className="sr-only" htmlFor="m-search">
+                      Search
+                    </label>
+                    <input
+                      id="m-search"
+                      type="text"
+                      name="q"
+                      placeholder="Search news..."
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-gray-500"
+                    />
+                    <button
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      aria-label="Search"
+                      type="submit"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-5 h-5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
@@ -197,16 +225,21 @@ export default function Navbar() {
             }`}
           >
             <div className="overflow-hidden">
-
               <div className="grid grid-cols-2 gap-2 py-2 sm:grid-cols-3">
-                {navLinks.map((label) => (
-                  <a
-                    key={label}
-                    href="#"
-                    className="px-3 py-2 text-sm rounded hover:bg-gray-100 text-gray-800"
+                {NAV.map(({ label, slug }) => (
+                  <Link
+                    key={slug}
+                    href={`/category/${slug}`}
+                    className={`px-3 py-2 text-sm rounded text-center
+                    ${
+                      isActive(slug)
+                        ? "bg-black text-white"
+                        : "hover:bg-gray-100 text-gray-800"
+                    }`}
+                    onClick={() => setMobileOpen(false)}
                   >
                     {label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
