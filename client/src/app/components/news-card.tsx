@@ -1,26 +1,45 @@
 import Link from "next/link";
 
 export default function NewsCard({ item }: { item: Article }) {
-  const imgSrc = item.multimedia?.[0]?.url ?? "/placeholder.png"; // fallback if missing
+  const imgSrc = item.multimedia?.[0]?.url ?? "/placeholder.png";
+  
+  const author = item.byline?.replace(/^By\s+/i, '') || '';
 
   return (
-    <div className="h-auto p-4 rounded-lg border border-zinc-300 dark:border-zinc-600 flex flex-col justify-between">
-      <div>
-        <img
-          src={imgSrc}
-          alt={item.title}
-          className="w-full h-48 object-cover rounded-md"
-        />
-        <h2 className="text-2xl font-semibold mt-3">{item.title}</h2>
-        <p className="text-sm text-gray-500">{item.abstract}</p>
-      </div>
-      <div>
-        <Link href={`/detail/`}>
-          <button className="bg-black dark:bg-white dark:text-black text-white px-4 py-2 rounded-md mt-3">
-            Read More
-          </button>
-        </Link>
-      </div>
-    </div>
+    <article className="group cursor-pointer">
+      <Link href={`/detail/`} className="block">
+        <div className="space-y-3">
+          <div className="aspect-[4/3] overflow-hidden">
+            <img
+              src={imgSrc}
+              alt={item.title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            {item.section && (
+              <div className="text-xs font-semibold text-red-600 uppercase tracking-wide">
+                {item.section}
+              </div>
+            )}
+            
+            <h2 className="text-lg font-bold leading-tight text-gray-900 dark:text-black group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors duration-200">
+              {item.title}
+            </h2>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
+              {item.abstract}
+            </p>
+            
+            {author && (
+              <div className="text-xs text-gray-500 dark:text-gray-500 font-medium pt-1">
+                By {author}
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+    </article>
   );
 }

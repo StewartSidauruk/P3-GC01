@@ -38,15 +38,6 @@ export default function Navbar() {
           <div className="flex items-center justify-between gap-4">
             <div className="text-[10px] xs:text-xs text-gray-600">{today}</div>
 
-            <div className="hidden sm:flex items-center gap-4 text-xs">
-              <a href="#" className="hover:underline">
-                Subscribe
-              </a>
-              <a href="#" className="hover:underline">
-                Log In
-              </a>
-            </div>
-
             <div className="flex sm:hidden items-center gap-2">
               <button
                 type="button"
@@ -107,10 +98,10 @@ export default function Navbar() {
 
           <div className="text-center py-4 sm:py-6">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-wide">
-              JakartTime&apos;s
+              JogjakarTime&apos;s
             </h1>
             <p className="text-[10px] sm:text-xs text-gray-600 mt-1 sm:mt-2 tracking-widest">
-              THE VOICE OF JAKARTA
+              THE VOICE OF WONG JOGJA
             </p>
           </div>
 
@@ -206,14 +197,6 @@ export default function Navbar() {
             }`}
           >
             <div className="overflow-hidden">
-              <div className="flex sm:hidden items-center justify-end gap-4 py-3 text-sm">
-                <a href="#" className="hover:underline">
-                  Subscribe
-                </a>
-                <a href="#" className="hover:underline">
-                  Log In
-                </a>
-              </div>
 
               <div className="grid grid-cols-2 gap-2 py-2 sm:grid-cols-3">
                 {navLinks.map((label) => (
