@@ -4,11 +4,12 @@ import { searchArticles } from "../lib/nyt";
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
-  const q = (searchParams?.q || "").trim();
+  const { q = "" } = await searchParams;
+  const query = q.trim();
 
-  if (!q) {
+  if (!query) {
     return (
       <div className="container mx-auto py-5 px-4">
         <h1 className="text-2xl font-bold mb-3">Search</h1>
@@ -17,13 +18,13 @@ export default async function SearchPage({
     );
   }
 
-  const results = await searchArticles(q);
+  const results = await searchArticles(query);
 
   return (
     <div className="container mx-auto py-5">
       <NewsContainer
         news={results}
-        heading={`Search: “${q}”`}
+        heading={`Search: “${query}”`}
         sub="Results from The New York Times"
       />
     </div>
