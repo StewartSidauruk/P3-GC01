@@ -16,16 +16,19 @@ export async function generateStaticParams() {
 
 export const dynamicParams = true;
 
-export async function generateMetadata(
-  { params }: { params: Params }
-): Promise<Metadata> {
-  const slug = params.slug.toLowerCase();
-  const section = SECTION_MAP[slug];
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const key = slug.toLowerCase();
+  const section = SECTION_MAP[key];
   if (!section) return { title: "Not Found • JogjakarTime's" };
 
-  const label = slug.charAt(0).toUpperCase() + slug.slice(1);
+  const label = key.charAt(0).toUpperCase() + key.slice(1);
   const description =
-    slug === "indonesia"
+    key === "indonesia"
       ? "Curated news from The New York Times World section filtered for Indonesia."
       : `Latest news from The New York Times ${label} section.`;
 
@@ -36,7 +39,7 @@ export async function generateMetadata(
       title: `${label} • JogjakarTime's`,
       description,
       type: "website",
-      url: `/category/${slug}`,
+      url: `/category/${key}`,
       siteName: "JogjakarTime's",
     },
     twitter: {
@@ -47,17 +50,22 @@ export async function generateMetadata(
   };
 }
 
-export default async function CategoryPage({ params }: { params: Params }) {
-  const slug = params.slug.toLowerCase();
-  const section = SECTION_MAP[slug];
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
+  const { slug } = await params;
+  const key = slug.toLowerCase();
+  const section = SECTION_MAP[key];
   if (!section) return notFound();
 
   let items: Article[] = await fetchTopStoriesBySection(section);
-  if (slug === "indonesia") items = filterIndonesia(items);
+  if (key === "indonesia") items = filterIndonesia(items);
 
-  const label = slug.charAt(0).toUpperCase() + slug.slice(1);
+  const label = key.charAt(0).toUpperCase() + key.slice(1);
   const sub =
-    slug === "indonesia"
+    key === "indonesia"
       ? "Curated from World section — filtered for Indonesia"
       : `From NYT ${section.toUpperCase()} section`;
 
