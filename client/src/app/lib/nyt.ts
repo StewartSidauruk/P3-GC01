@@ -25,13 +25,23 @@ export const SECTION_MAP: Record<string, string> = {
 
 export async function fetchTopStoriesBySection(section: string): Promise<Article[]> {
   const url = `https://api.nytimes.com/svc/topstories/v2/${section}.json?api-key=${API_KEY}`;
-  const res = await fetch(url, {
-    next: { revalidate: 600 },
-  });
-  if (!res.ok) throw new Error(`Failed to fetch NYT ${section}`);
-  const json = await res.json();
-  return json.results as Article[];
+
+  try {
+    const res = await fetch(url, { next: { revalidate: 600 } });
+
+    if (!res.ok) {
+      console.error("[NYT] TopStories error", { section, status: res.status, statusText: res.statusText });
+      return [];
+    }
+
+    const json = await res.json();
+    return (json.results ?? []) as Article[];
+  } catch (err) {
+    console.error("[NYT] TopStories fetch failed", { section, err });
+    return [];
+  }
 }
+
 
 export function filterIndonesia(items: Article[]): Article[] {
   const kw = /(indonesia|jakarta|yogyakarta|bali|nusantara|jokowi|prabowo)/i;
